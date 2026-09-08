@@ -112,6 +112,34 @@ public final class LegendaryLoot {
     }
 
     /**
+     * Supplies for an elite kill, scaled by rank, plus a signature piece for the upper ranks.
+     * Elites are a separate axis from the legendary prefixes, so they pay out on their own.
+     */
+    public static List<ItemStack> buildEliteDrops(RandomSource random, EliteRank rank,
+                                                  boolean withSignature) {
+        List<ItemStack> drops = new ArrayList<>();
+        List<Item> supplies = supplyPool();
+
+        for (int i = 0; i < rank.supplyRolls(); i++) {
+            drops.add(new ItemStack(supplies.get(random.nextInt(supplies.size())), 1 + random.nextInt(3)));
+        }
+
+        if (withSignature) {
+            List<Item> gear = gearPool();
+            ItemStack signature = new ItemStack(gear.get(random.nextInt(gear.size())));
+            EnchantmentHelper.enchantItem(random, signature, 25 + random.nextInt(15), true);
+            overcharge(signature, random, false);
+            signature.setHoverName(Component
+                    .literal(EliteRank.SKULL + " " + rank.title() + " "
+                            + signature.getItem().getDescription().getString())
+                    .withStyle(rank.color()));
+            drops.add(signature);
+        }
+
+        return drops;
+    }
+
+    /**
      * Pushes the rolled enchantments past their vanilla ceiling - Protection VI, Sharpness VII
      * and the like. Minecraft honours levels above the maximum when they are set directly;
      * they simply cannot be reached through an enchanting table or an anvil.

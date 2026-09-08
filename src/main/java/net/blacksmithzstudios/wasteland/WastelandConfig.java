@@ -37,6 +37,8 @@ public class WastelandConfig {
     public static final ForgeConfigSpec.IntValue BONUS_LOOT_ROLLS;
     public static final ForgeConfigSpec.BooleanValue OVERCHARGED_ENCHANTMENTS;
     public static final ForgeConfigSpec.BooleanValue DOUBLE_VANILLA_LOOT;
+    public static final ForgeConfigSpec.BooleanValue ELITE_LOOT;
+    public static final ForgeConfigSpec.BooleanValue BONUS_EXPERIENCE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
@@ -123,6 +125,13 @@ public class WastelandConfig {
                          "Turn this off when playing with mods whose mobs drop unique items,",
                          "or the doubling will duplicate them.")
                 .define("doubleVanillaLoot", true);
+        ELITE_LOOT = BUILDER
+                .comment("Elites multiply their own drops and add supplies, scaled by rank.",
+                         "Without this an elite is only harder, never more rewarding.")
+                .define("eliteLoot", true);
+        BONUS_EXPERIENCE = BUILDER
+                .comment("Legendary and elite kills award more experience, scaled the same way.")
+                .define("bonusExperience", true);
         OVERCHARGED_ENCHANTMENTS = BUILDER
                 .comment("Let drops carry enchantments past their vanilla maximum,",
                          "such as Protection VI or Sharpness VII.")

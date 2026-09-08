@@ -42,24 +42,44 @@ public class LegendaryLootModifier extends LootModifier {
         }
 
         LegendaryPrefix prefix = LegendaryData.prefixOf(entity);
-        if (prefix == null) {
+        EliteRank elite = LegendaryData.eliteOf(entity);
+        if (prefix == null && elite == null) {
             return loot;
         }
 
-        boolean mutated = LegendaryData.hasMutated(entity);
+        boolean mutated = prefix != null && LegendaryData.hasMutated(entity);
 
-        // A mutated legendary drops twice what it normally would - including a modded mob's
-        // own table, since by this point that table has already been rolled into `loot`.
+        // How many times the mob's own table is repeated. An elite that took five times as
+        // long to kill should not pay out like an ordinary mob, and a mutation doubles again.
+        // By this point that table has already been rolled into `loot`, modded drops included.
+        int copies = 1;
+        if (elite != null && WastelandConfig.ELITE_LOOT.get()) {
+            copies = elite.lootCopies();
+        }
         if (mutated && WastelandConfig.DOUBLE_VANILLA_LOOT.get()) {
-            ObjectArrayList<ItemStack> doubled = new ObjectArrayList<>();
-            for (ItemStack stack : loot) {
-                doubled.add(stack.copy());
+            copies *= 2;
+        }
+        if (copies > 1) {
+            ObjectArrayList<ItemStack> original = new ObjectArrayList<>(loot);
+            for (int i = 1; i < copies; i++) {
+                for (ItemStack stack : original) {
+                    loot.add(stack.copy());
+                }
             }
-            loot.addAll(doubled);
         }
 
-        loot.addAll(LegendaryLoot.buildDrops(context.getRandom(), prefix,
-                WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
+        if (prefix != null) {
+            loot.addAll(LegendaryLoot.buildDrops(context.getRandom(), prefix,
+                    WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
+        }
+
+        // An elite that is not also legendary still deserves supplies, and the upper ranks
+        // deserve a signature piece of their own.
+        if (elite != null && WastelandConfig.ELITE_LOOT.get()) {
+            loot.addAll(LegendaryLoot.buildEliteDrops(context.getRandom(), elite,
+                    prefix == null && elite.dropsSignatureGear()));
+        }
+
         loot.addAll(MobLootRules.rollFor(entity, context.getRandom(), mutated));
         return loot;
     }

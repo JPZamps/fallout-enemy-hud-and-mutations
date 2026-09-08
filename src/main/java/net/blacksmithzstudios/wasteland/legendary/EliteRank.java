@@ -63,6 +63,29 @@ public enum EliteRank {
         return title;
     }
 
+    /**
+     * How many times the mob's own drops are repeated. A rank that took five times as long
+     * to kill should not pay out like an ordinary one.
+     */
+    public int lootCopies() {
+        return 2 + ordinal() / 2;
+    }
+
+    /** Extra supply rolls on top, growing with the rank. */
+    public int supplyRolls() {
+        return 1 + ordinal() / 2;
+    }
+
+    /** Experience scales with the rank too, for the same reason. */
+    public float experienceMultiplier() {
+        return 1.5F + ordinal() * 0.5F;
+    }
+
+    /** Only the upper ranks are worth a signature piece of gear. */
+    public boolean dropsSignatureGear() {
+        return ordinal() >= ELITE.ordinal();
+    }
+
     public ChatFormatting color() {
         return color;
     }
