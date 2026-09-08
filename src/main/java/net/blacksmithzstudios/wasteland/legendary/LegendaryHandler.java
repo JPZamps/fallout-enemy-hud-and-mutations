@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -236,6 +237,31 @@ public class LegendaryHandler {
         }
         attacker.heal(amount * 0.5F);
         PrefixSignatures.showLifesteal(attacker);
+    }
+
+    /**
+     * A tougher enemy is worth more experience. Without this an elite that took five times
+     * as long to kill awards exactly what an ordinary one would.
+     */
+    @SubscribeEvent
+    public static void onExperienceDrop(LivingExperienceDropEvent event) {
+        if (!WastelandConfig.BONUS_EXPERIENCE.get()) {
+            return;
+        }
+        LivingEntity entity = event.getEntity();
+
+        float multiplier = 1.0F;
+        EliteRank elite = LegendaryData.eliteOf(entity);
+        if (elite != null) {
+            multiplier *= elite.experienceMultiplier();
+        }
+        if (LegendaryData.prefixOf(entity) != null) {
+            multiplier *= LegendaryData.hasMutated(entity) ? 3.0F : 2.0F;
+        }
+
+        if (multiplier > 1.0F) {
+            event.setDroppedExperience(Math.round(event.getDroppedExperience() * multiplier));
+        }
     }
 
     /** The Explosive roll's parting gift. Loot is handled by the loot modifier. */

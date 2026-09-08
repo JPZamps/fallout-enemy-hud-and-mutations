@@ -15,11 +15,12 @@ import net.neoforged.neoforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Adds legendary rewards through the loot table rather than by spawning items on death.
+ * Adds legendary and elite rewards through the loot table rather than by spawning items on
+ * death.
  *
  * Going through the table is what makes the mod cooperate with everything else installed:
  * Looting, other mods' loot modifiers and datapack overrides all see these drops, and the
- * doubling below applies to whatever a modded mob normally drops, not just to our own items.
+ * multipliers below apply to whatever a modded mob normally drops, not just to our own items.
  */
 public class LegendaryLootModifier extends LootModifier {
 
@@ -42,25 +43,47 @@ public class LegendaryLootModifier extends LootModifier {
         }
 
         LegendaryPrefix prefix = LegendaryData.prefixOf(entity);
-        if (prefix == null) {
+        EliteRank elite = LegendaryData.eliteOf(entity);
+        if (prefix == null && elite == null) {
             return loot;
         }
 
-        boolean mutated = LegendaryData.hasMutated(entity);
+        boolean mutated = prefix != null && LegendaryData.hasMutated(entity);
 
-        // A mutated legendary drops twice what it normally would - including a modded mob's
-        // own table, since by this point that table has already been rolled into `loot`.
+        // How many times the mob's own table is repeated. An elite that took five times as
+        // long to kill should not pay out like an ordinary mob, and a mutation doubles again.
+        int copies = 1;
+        if (elite != null && WastelandConfig.ELITE_LOOT.get()) {
+            copies = elite.lootCopies();
+        }
         if (mutated && WastelandConfig.DOUBLE_VANILLA_LOOT.get()) {
-            ObjectArrayList<ItemStack> doubled = new ObjectArrayList<>();
-            for (ItemStack stack : loot) {
-                doubled.add(stack.copy());
+            copies *= 2;
+        }
+        if (copies > 1) {
+            ObjectArrayList<ItemStack> original = new ObjectArrayList<>(loot);
+            for (int i = 1; i < copies; i++) {
+                for (ItemStack stack : original) {
+                    loot.add(stack.copy());
+                }
             }
-            loot.addAll(doubled);
         }
 
-        loot.addAll(LegendaryLoot.buildDrops(context.getLevel().registryAccess(), context.getRandom(),
-                prefix, WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
-        loot.addAll(MobLootRules.rollFor(entity, context.getRandom(), mutated));
+        var registries = context.getLevel().registryAccess();
+        var random = context.getRandom();
+
+        if (prefix != null) {
+            loot.addAll(LegendaryLoot.buildDrops(registries, random, prefix,
+                    WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
+        }
+
+        // An elite that is not also legendary still deserves supplies, and the upper ranks
+        // deserve a signature piece of their own.
+        if (elite != null && WastelandConfig.ELITE_LOOT.get()) {
+            loot.addAll(LegendaryLoot.buildEliteDrops(registries, random, elite,
+                    prefix == null && elite.dropsSignatureGear()));
+        }
+
+        loot.addAll(MobLootRules.rollFor(entity, random, mutated));
         return loot;
     }
 

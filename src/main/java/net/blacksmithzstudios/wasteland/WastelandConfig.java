@@ -37,6 +37,8 @@ public class WastelandConfig {
     public static final ModConfigSpec.IntValue BONUS_LOOT_ROLLS;
     public static final ModConfigSpec.BooleanValue OVERCHARGED_ENCHANTMENTS;
     public static final ModConfigSpec.BooleanValue DOUBLE_VANILLA_LOOT;
+    public static final ModConfigSpec.BooleanValue ELITE_LOOT;
+    public static final ModConfigSpec.BooleanValue BONUS_EXPERIENCE;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
@@ -123,6 +125,13 @@ public class WastelandConfig {
                          "Turn this off when playing with mods whose mobs drop unique items,",
                          "or the doubling will duplicate them.")
                 .define("doubleVanillaLoot", true);
+        ELITE_LOOT = BUILDER
+                .comment("Elites multiply their own drops and add supplies, scaled by rank.",
+                         "Without this an elite is only harder, never more rewarding.")
+                .define("eliteLoot", true);
+        BONUS_EXPERIENCE = BUILDER
+                .comment("Legendary and elite kills award more experience, scaled the same way.")
+                .define("bonusExperience", true);
         OVERCHARGED_ENCHANTMENTS = BUILDER
                 .comment("Let drops carry enchantments past their vanilla maximum,",
                          "such as Protection VI or Sharpness VII.")
@@ -135,6 +144,7 @@ public class WastelandConfig {
                         "minecraft:stone_axe", "minecraft:golden_axe",
                         "minecraft:iron_axe", "minecraft:diamond_axe",
                         "minecraft:bow", "minecraft:crossbow", "minecraft:trident", "minecraft:shield",
+                        "minecraft:mace",
                         "minecraft:leather_helmet", "minecraft:leather_chestplate",
                         "minecraft:leather_leggings", "minecraft:leather_boots",
                         "minecraft:chainmail_helmet", "minecraft:chainmail_chestplate",
@@ -159,7 +169,10 @@ public class WastelandConfig {
                         "minecraft:redstone", "minecraft:amethyst_shard", "minecraft:glowstone_dust",
                         "minecraft:blaze_powder", "minecraft:gunpowder", "minecraft:string",
                         "minecraft:leather", "minecraft:arrow", "minecraft:ender_pearl",
-                        "minecraft:experience_bottle", "minecraft:torch"
+                        "minecraft:experience_bottle", "minecraft:torch",
+                        "minecraft:wind_charge", "minecraft:breeze_rod",
+                        "minecraft:ominous_bottle", "minecraft:trial_key",
+                        "minecraft:armadillo_scute", "minecraft:wolf_armor"
                 ), entry -> entry instanceof String);
         MOB_LOOT_RULES = BUILDER
                 .comment("Per-mob drops for legendary kills, one rule per line.",
