@@ -1,6 +1,6 @@
 package net.blacksmithzstudios.wasteland;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 
@@ -10,50 +10,50 @@ import java.util.List;
  */
 public class WastelandConfig {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     // ---- mutation ----
-    public static final ForgeConfigSpec.BooleanValue LEGENDARY_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue LEGENDARY_CHANCE;
-    public static final ForgeConfigSpec.BooleanValue MUTATION_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue MUTATION_CHANCE;
-    public static final ForgeConfigSpec.BooleanValue MUTATE_ONLY_WHEN_ENGAGED;
-    public static final ForgeConfigSpec.DoubleValue MUTATION_RANGE;
-    public static final ForgeConfigSpec.BooleanValue GLOWING_LEGENDARIES;
-    public static final ForgeConfigSpec.BooleanValue PREFIX_SIGNATURES;
-    public static final ForgeConfigSpec.DoubleValue LEGENDARY_STRENGTH;
-    public static final ForgeConfigSpec.DoubleValue EASY_SCALE;
-    public static final ForgeConfigSpec.DoubleValue NORMAL_SCALE;
-    public static final ForgeConfigSpec.DoubleValue HARD_SCALE;
+    public static final ModConfigSpec.BooleanValue LEGENDARY_ENABLED;
+    public static final ModConfigSpec.DoubleValue LEGENDARY_CHANCE;
+    public static final ModConfigSpec.BooleanValue MUTATION_ENABLED;
+    public static final ModConfigSpec.DoubleValue MUTATION_CHANCE;
+    public static final ModConfigSpec.BooleanValue MUTATE_ONLY_WHEN_ENGAGED;
+    public static final ModConfigSpec.DoubleValue MUTATION_RANGE;
+    public static final ModConfigSpec.BooleanValue GLOWING_LEGENDARIES;
+    public static final ModConfigSpec.BooleanValue PREFIX_SIGNATURES;
+    public static final ModConfigSpec.DoubleValue LEGENDARY_STRENGTH;
+    public static final ModConfigSpec.DoubleValue EASY_SCALE;
+    public static final ModConfigSpec.DoubleValue NORMAL_SCALE;
+    public static final ModConfigSpec.DoubleValue HARD_SCALE;
 
     // ---- elite ----
-    public static final ForgeConfigSpec.BooleanValue ELITE_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue ELITE_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue ELITE_STRENGTH;
-    public static final ForgeConfigSpec.BooleanValue ELITE_GEAR;
+    public static final ModConfigSpec.BooleanValue ELITE_ENABLED;
+    public static final ModConfigSpec.DoubleValue ELITE_CHANCE;
+    public static final ModConfigSpec.DoubleValue ELITE_STRENGTH;
+    public static final ModConfigSpec.BooleanValue ELITE_GEAR;
 
     // ---- loot ----
-    public static final ForgeConfigSpec.BooleanValue LOOT_ENABLED;
-    public static final ForgeConfigSpec.IntValue BONUS_LOOT_ROLLS;
-    public static final ForgeConfigSpec.BooleanValue OVERCHARGED_ENCHANTMENTS;
-    public static final ForgeConfigSpec.BooleanValue DOUBLE_VANILLA_LOOT;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
+    public static final ModConfigSpec.BooleanValue LOOT_ENABLED;
+    public static final ModConfigSpec.IntValue BONUS_LOOT_ROLLS;
+    public static final ModConfigSpec.BooleanValue OVERCHARGED_ENCHANTMENTS;
+    public static final ModConfigSpec.BooleanValue DOUBLE_VANILLA_LOOT;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
 
     // ---- gear ----
-    public static final ForgeConfigSpec.BooleanValue GEAR_LEGENDS_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue LEGEND_WEAPON_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue LEGEND_ARMOR_CHANCE;
+    public static final ModConfigSpec.BooleanValue GEAR_LEGENDS_ENABLED;
+    public static final ModConfigSpec.DoubleValue LEGEND_WEAPON_CHANCE;
+    public static final ModConfigSpec.DoubleValue LEGEND_ARMOR_CHANCE;
 
     // ---- mobs ----
-    public static final ForgeConfigSpec.BooleanValue INCLUDE_BOSSES;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_BLACKLIST;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXTRA_MOBS;
+    public static final ModConfigSpec.BooleanValue INCLUDE_BOSSES;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_BLACKLIST;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> EXTRA_MOBS;
 
     // ---- detection (server side) ----
-    public static final ForgeConfigSpec.BooleanValue DETECTION_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue DETECTION_RANGE;
+    public static final ModConfigSpec.BooleanValue DETECTION_ENABLED;
+    public static final ModConfigSpec.DoubleValue DETECTION_RANGE;
 
     static {
         BUILDER.comment("When mobs become legendary and when they mutate.").push("mutation");
@@ -214,6 +214,6 @@ public class WastelandConfig {
         BUILDER.pop();
     }
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
 }

@@ -1,6 +1,6 @@
 package net.blacksmithzstudios.wasteland.legendary;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.blacksmithzstudios.wasteland.WastelandConfig;
@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LegendaryLootModifier extends LootModifier {
 
-    public static final Codec<LegendaryLootModifier> CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<LegendaryLootModifier> CODEC = RecordCodecBuilder.mapCodec(
             instance -> LootModifier.codecStart(instance).apply(instance, LegendaryLootModifier::new));
 
     public LegendaryLootModifier(LootItemCondition[] conditions) {
@@ -58,14 +58,14 @@ public class LegendaryLootModifier extends LootModifier {
             loot.addAll(doubled);
         }
 
-        loot.addAll(LegendaryLoot.buildDrops(context.getRandom(), prefix,
-                WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
+        loot.addAll(LegendaryLoot.buildDrops(context.getLevel().registryAccess(), context.getRandom(),
+                prefix, WastelandConfig.BONUS_LOOT_ROLLS.get(), mutated));
         loot.addAll(MobLootRules.rollFor(entity, context.getRandom(), mutated));
         return loot;
     }
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public MapCodec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
 }

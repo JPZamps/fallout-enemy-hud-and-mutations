@@ -9,9 +9,9 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +24,7 @@ import java.util.Locale;
  *   /mutate elite &lt;targets&gt; [rank]         - promote mobs to a higher-level elite
  *   /mutate clear &lt;targets&gt;                - strip every trace back off
  */
-@Mod.EventBusSubscriber(modid = WastelandMod.MOD_ID)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class WastelandCommand {
 
     private WastelandCommand() {

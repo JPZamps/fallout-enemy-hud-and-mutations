@@ -22,14 +22,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.slf4j.Logger;
 
-@Mod.EventBusSubscriber(modid = WastelandMod.MOD_ID)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public class LegendaryHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -155,7 +155,7 @@ public class LegendaryHandler {
 
     /** Mutation: dropped below half health, a legendary heals to full and powers up. Once. */
     @SubscribeEvent
-    public static void onHurt(LivingHurtEvent event) {
+    public static void onHurt(LivingIncomingDamageEvent event) {
         try {
             handleHurt(event);
         } catch (Throwable failure) {
@@ -163,7 +163,7 @@ public class LegendaryHandler {
         }
     }
 
-    private static void handleHurt(LivingHurtEvent event) {
+    private static void handleHurt(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
 
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
@@ -218,7 +218,7 @@ public class LegendaryHandler {
      * A legendary may only turn while a player is genuinely in the fight: the player either
      * struck the blow or is being hunted, and is close enough to witness it either way.
      */
-    private static boolean isEngagedWithPlayer(LivingEntity victim, LivingHurtEvent event) {
+    private static boolean isEngagedWithPlayer(LivingEntity victim, LivingIncomingDamageEvent event) {
         double range = WastelandConfig.MUTATION_RANGE.get();
 
         if (event.getSource().getEntity() instanceof Player striker) {

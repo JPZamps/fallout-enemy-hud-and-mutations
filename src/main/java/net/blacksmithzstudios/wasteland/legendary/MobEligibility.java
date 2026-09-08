@@ -1,11 +1,11 @@
 package net.blacksmithzstudios.wasteland.legendary;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.blacksmithzstudios.wasteland.WastelandConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
 
 /**
  * Decides which mobs the mod touches.
@@ -45,7 +45,7 @@ public final class MobEligibility {
 
 
     private static String idOf(LivingEntity entity) {
-        var key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        var key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return key != null ? key.toString() : "";
     }
 }

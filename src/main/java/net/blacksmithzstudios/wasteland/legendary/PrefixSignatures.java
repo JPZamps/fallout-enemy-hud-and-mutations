@@ -5,9 +5,9 @@ import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * Ambient particles that tell the eight rolls apart during a fight.
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
  * Without this, Savage and Sturdy differ only in numbers the player never sees. One vanilla
  * particle per prefix teaches the roster without a line of text or a single new asset.
  */
-@Mod.EventBusSubscriber(modid = WastelandMod.MOD_ID)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class PrefixSignatures {
 
     /** Ticks between puffs. Often enough to read, sparse enough to stay quiet. */
@@ -25,8 +25,10 @@ public final class PrefixSignatures {
     }
 
     @SubscribeEvent
-    public static void onTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onTick(EntityTickEvent.Post event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
+            return; // EntityTickEvent fires for every entity, not just living ones
+        }
         if (!(entity.level() instanceof ServerLevel level) || entity.tickCount % INTERVAL != 0) {
             return;
         }

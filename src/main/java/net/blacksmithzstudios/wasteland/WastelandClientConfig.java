@@ -1,6 +1,6 @@
 package net.blacksmithzstudios.wasteland;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
  * Everything the HUD draws.
@@ -11,24 +11,24 @@ import net.minecraftforge.common.ForgeConfigSpec;
  */
 public final class WastelandClientConfig {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ForgeConfigSpec.BooleanValue HUD_ENABLED;
-    public static final ForgeConfigSpec.BooleanValue HUD_SKIP_BOSSES;
-    public static final ForgeConfigSpec.DoubleValue TARGET_RANGE;
-    public static final ForgeConfigSpec.BooleanValue DETECTION_INDICATOR;
-    public static final ForgeConfigSpec.BooleanValue DETECTION_ONLY_SNEAKING;
-    public static final ForgeConfigSpec.IntValue TARGET_BAR_WIDTH;
-    public static final ForgeConfigSpec.IntValue TARGET_BAR_HEIGHT;
-    public static final ForgeConfigSpec.IntValue TARGET_TOP_MARGIN;
-    public static final ForgeConfigSpec.IntValue TARGET_NAME_TO_BAR_GAP;
-    public static final ForgeConfigSpec.DoubleValue TARGET_NAME_SCALE;
-    public static final ForgeConfigSpec.ConfigValue<String> TARGET_BAR_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> TARGET_BAR_LOST_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> TARGET_NAME_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> HIDDEN_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> CAUTION_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> DANGER_COLOR;
+    public static final ModConfigSpec.BooleanValue HUD_ENABLED;
+    public static final ModConfigSpec.BooleanValue HUD_SKIP_BOSSES;
+    public static final ModConfigSpec.DoubleValue TARGET_RANGE;
+    public static final ModConfigSpec.BooleanValue DETECTION_INDICATOR;
+    public static final ModConfigSpec.BooleanValue DETECTION_ONLY_SNEAKING;
+    public static final ModConfigSpec.IntValue TARGET_BAR_WIDTH;
+    public static final ModConfigSpec.IntValue TARGET_BAR_HEIGHT;
+    public static final ModConfigSpec.IntValue TARGET_TOP_MARGIN;
+    public static final ModConfigSpec.IntValue TARGET_NAME_TO_BAR_GAP;
+    public static final ModConfigSpec.DoubleValue TARGET_NAME_SCALE;
+    public static final ModConfigSpec.ConfigValue<String> TARGET_BAR_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> TARGET_BAR_LOST_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> TARGET_NAME_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> HIDDEN_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> CAUTION_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> DANGER_COLOR;
 
     static {
         String colourHelp = "Either RRGGBB hex or a Minecraft dye name: " + WastelandColors.dyeList() + ".";
@@ -83,7 +83,7 @@ public final class WastelandClientConfig {
         BUILDER.pop();
     }
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     private WastelandClientConfig() {
     }

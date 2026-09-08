@@ -1,5 +1,6 @@
 package net.blacksmithzstudios.wasteland.legendary;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.blacksmithzstudios.wasteland.WastelandConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -7,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public final class MobLootRules {
     }
 
     /**
-     * Rules are re-parsed only when the config list itself changes. ForgeConfigSpec hands back
+     * Rules are re-parsed only when the config list itself changes. ModConfigSpec hands back
      * the same list instance until a reload, so an identity check is enough - and it keeps a
      * string parse out of every single legendary death.
      */
@@ -84,7 +84,7 @@ public final class MobLootRules {
 
         String mobId = parts[0].trim();
         ResourceLocation itemKey = ResourceLocation.tryParse(parts[1].trim());
-        Item item = itemKey == null ? null : ForgeRegistries.ITEMS.getValue(itemKey);
+        Item item = itemKey == null ? null : BuiltInRegistries.ITEM.get(itemKey);
         if (item == null || item == Items.AIR) {
             return null; // an item no installed mod provides
         }
@@ -115,7 +115,7 @@ public final class MobLootRules {
     }
 
     private static String idOf(LivingEntity entity) {
-        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return key != null ? key.toString() : "";
     }
 }

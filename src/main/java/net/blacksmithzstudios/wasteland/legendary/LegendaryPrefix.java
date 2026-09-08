@@ -1,6 +1,8 @@
 package net.blacksmithzstudios.wasteland.legendary;
 
+import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -9,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.RandomSource;
 
-import java.util.UUID;
+
 
 /**
  * The legendary rolls. Every effect is expressed through vanilla attributes or
@@ -26,11 +28,15 @@ public enum LegendaryPrefix {
     EXPLOSIVE ("Explosive",  ChatFormatting.GOLD,        0.0,  0.4,  0.0,  0.0, ParticleTypes.SMOKE),
     RELENTLESS("Relentless", ChatFormatting.LIGHT_PURPLE,0.8,  0.5,  0.15, 4.0, ParticleTypes.END_ROD);
 
-    /** Fixed UUIDs so the modifiers are idempotent across a save/load cycle. */
-    private static final UUID HEALTH_ID = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0001");
-    private static final UUID DAMAGE_ID = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0002");
-    private static final UUID SPEED_ID  = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0003");
-    private static final UUID ARMOR_ID  = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0004");
+    /** Fixed ids so the modifiers are idempotent across a save/load cycle. */
+    private static final ResourceLocation HEALTH_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_health");
+    private static final ResourceLocation DAMAGE_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_damage");
+    private static final ResourceLocation SPEED_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_speed");
+    private static final ResourceLocation ARMOR_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_armor");
 
     private final String displayName;
     private final ChatFormatting color;
@@ -83,10 +89,10 @@ public enum LegendaryPrefix {
      *                 make legendaries as dangerous as the player wants without retuning each roll
      */
     public void applyTo(LivingEntity entity, double strength) {
-        addMultiplier(entity.getAttribute(Attributes.MAX_HEALTH),      HEALTH_ID, "wasteland_health", healthBonus * strength);
-        addMultiplier(entity.getAttribute(Attributes.ATTACK_DAMAGE),   DAMAGE_ID, "wasteland_damage", damageBonus * strength);
-        addMultiplier(entity.getAttribute(Attributes.MOVEMENT_SPEED),  SPEED_ID,  "wasteland_speed",  speedBonus);
-        addFlat      (entity.getAttribute(Attributes.ARMOR),           ARMOR_ID,  "wasteland_armor",  armorBonus * strength);
+        addMultiplier(entity.getAttribute(Attributes.MAX_HEALTH), HEALTH_ID, healthBonus * strength);
+        addMultiplier(entity.getAttribute(Attributes.ATTACK_DAMAGE), DAMAGE_ID, damageBonus * strength);
+        addMultiplier(entity.getAttribute(Attributes.MOVEMENT_SPEED), SPEED_ID, speedBonus);
+        addFlat(entity.getAttribute(Attributes.ARMOR), ARMOR_ID, armorBonus * strength);
         entity.setHealth(entity.getMaxHealth());
     }
 
@@ -99,25 +105,25 @@ public enum LegendaryPrefix {
         entity.setHealth(Math.min(entity.getHealth(), entity.getMaxHealth()));
     }
 
-    private static void removeModifier(AttributeInstance attribute, UUID id) {
+    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
         if (attribute != null && attribute.getModifier(id) != null) {
             attribute.removeModifier(id);
         }
     }
 
-    private static void addMultiplier(AttributeInstance attribute, UUID id, String name, double amount) {
+    private static void addMultiplier(AttributeInstance attribute, ResourceLocation id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
         attribute.addPermanentModifier(
-                new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_BASE));
+                new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
     }
 
-    private static void addFlat(AttributeInstance attribute, UUID id, String name, double amount) {
+    private static void addFlat(AttributeInstance attribute, ResourceLocation id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
         attribute.addPermanentModifier(
-                new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADDITION));
+                new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
     }
 }

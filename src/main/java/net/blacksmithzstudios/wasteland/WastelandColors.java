@@ -1,6 +1,6 @@
 package net.blacksmithzstudios.wasteland;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Locale;
 import java.util.Map;
@@ -51,7 +51,7 @@ public final class WastelandColors {
      * @param fallback used when the value is neither a dye name nor valid hex, so a typo
      *                 costs the reader a wrong colour rather than a crash
      */
-    public static int resolve(ForgeConfigSpec.ConfigValue<String> value, int fallback) {
+    public static int resolve(ModConfigSpec.ConfigValue<String> value, int fallback) {
         String raw = value.get();
         if (raw == null) {
             return fallback;

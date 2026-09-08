@@ -7,18 +7,18 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.slf4j.Logger;
 
 /**
  * Runs the legendary gear effects. Everything is driven off the NBT tag on the stack, so it
  * works the same whether the holder is a legendary mob or the player who looted it from one.
  */
-@Mod.EventBusSubscriber(modid = WastelandMod.MOD_ID)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class GearEffectHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -30,7 +30,7 @@ public final class GearEffectHandler {
     }
 
     @SubscribeEvent
-    public static void onHurt(LivingHurtEvent event) {
+    public static void onHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide() || !WastelandConfig.GEAR_LEGENDS_ENABLED.get()) {
             return;
         }
@@ -45,7 +45,7 @@ public final class GearEffectHandler {
         }
     }
 
-    private static void applyEffects(LivingHurtEvent event) {
+    private static void applyEffects(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
         float amount = event.getAmount();
 
@@ -91,8 +91,10 @@ public final class GearEffectHandler {
     }
 
     @SubscribeEvent
-    public static void onTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onTick(EntityTickEvent.Post event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
+            return; // EntityTickEvent fires for every entity, not just living ones
+        }
         if (entity.level().isClientSide()
                 || entity.tickCount % WORN_INTERVAL != 0
                 || !WastelandConfig.GEAR_LEGENDS_ENABLED.get()) {

@@ -2,28 +2,34 @@ package net.blacksmithzstudios.wasteland.legendary;
 
 import net.blacksmithzstudios.wasteland.WastelandConfig;
 import net.blacksmithzstudios.wasteland.gear.GearLegends;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Legendary drops are ordinary items - vanilla or modded, whatever the config lists -
  * made interesting by the roll: an over-enchanted piece of gear plus a handful of supplies.
  */
 public final class LegendaryLoot {
+
+    /** How many enchantments a signature piece carries at most. */
+    private static final int MAX_ENCHANTMENTS = 4;
 
     private LegendaryLoot() {
     }
@@ -35,8 +41,8 @@ public final class LegendaryLoot {
      * A legendary that survived long enough to mutate is worth twice as much: two signature
      * pieces instead of one, and double the supply rolls.
      */
-    public static List<ItemStack> buildDrops(RandomSource random, LegendaryPrefix prefix,
-                                             int rolls, boolean mutated) {
+    public static List<ItemStack> buildDrops(RegistryAccess registries, RandomSource random,
+                                             LegendaryPrefix prefix, int rolls, boolean mutated) {
         List<ItemStack> drops = new ArrayList<>();
 
         List<Item> gear = gearPool();
@@ -45,16 +51,14 @@ public final class LegendaryLoot {
         int signatures = mutated ? 2 : 1;
         int supplyRolls = mutated ? rolls * 2 : rolls;
 
-        // Signature pieces: gear pushed well past normal enchanting-table levels.
         for (int i = 0; i < signatures; i++) {
             ItemStack signature = new ItemStack(gear.get(random.nextInt(gear.size())));
-            EnchantmentHelper.enchantItem(random, signature, 25 + random.nextInt(15), true);
-            overcharge(signature, random, mutated);
+            enchantBeyondVanilla(signature, registries, random, mutated);
 
             String label = mutated
-                    ? LegendaryData.STAR + " Legendary " + signature.getItem().getDescription().getString()
-                    : prefix.displayName() + " " + signature.getItem().getDescription().getString();
-            signature.setHoverName(Component.literal(label).withStyle(prefix.color()));
+                    ? LegendaryData.STAR + " Legendary " + signature.getItem().getName(signature).getString()
+                    : prefix.displayName() + " " + signature.getItem().getName(signature).getString();
+            signature.set(DataComponents.CUSTOM_NAME, Component.literal(label).withStyle(prefix.color()));
 
             // The signature piece carries a legendary effect of its own, which also renames it.
             if (WastelandConfig.GEAR_LEGENDS_ENABLED.get()) {
@@ -63,12 +67,53 @@ public final class LegendaryLoot {
             drops.add(signature);
         }
 
-        // Plus the supply rolls.
         for (int i = 0; i < supplyRolls; i++) {
             drops.add(new ItemStack(supplies.get(random.nextInt(supplies.size())), 1 + random.nextInt(3)));
         }
 
         return drops;
+    }
+
+    /**
+     * Enchants a piece past the vanilla ceiling: Protection VI, Sharpness VII and the like,
+     * levels no enchanting table or anvil can reach.
+     *
+     * Since 1.21 enchantments are data driven, so rather than asking vanilla to roll a set we
+     * pick from the registry ourselves. That keeps the over-levelling honest, respects each
+     * enchantment's own compatibility rules, and picks up enchantments from other mods for free.
+     */
+    private static void enchantBeyondVanilla(ItemStack stack, RegistryAccess registries,
+                                             RandomSource random, boolean mutated) {
+        HolderLookup.RegistryLookup<Enchantment> lookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
+        List<Holder.Reference<Enchantment>> candidates = lookup.listElements()
+                .filter(holder -> holder.value().canEnchant(stack))
+                .filter(holder -> !holder.is(EnchantmentTags.CURSE))
+                .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+        if (candidates.isEmpty()) {
+            return;
+        }
+
+        List<Holder<Enchantment>> chosen = new ArrayList<>();
+        int wanted = 1 + random.nextInt(MAX_ENCHANTMENTS);
+        while (chosen.size() < wanted && !candidates.isEmpty()) {
+            Holder<Enchantment> pick = candidates.remove(random.nextInt(candidates.size()));
+            // Vanilla decides what may sit alongside what; Sharpness and Smite still exclude.
+            if (chosen.stream().allMatch(other -> Enchantment.areCompatible(other, pick))) {
+                chosen.add(pick);
+            }
+        }
+
+        boolean overchargeAllowed = WastelandConfig.OVERCHARGED_ENCHANTMENTS.get();
+        int headroom = mutated ? 3 : 2;
+
+        EnchantmentHelper.updateEnchantments(stack, mutable -> {
+            for (Holder<Enchantment> holder : chosen) {
+                int max = holder.value().getMaxLevel();
+                int level = overchargeAllowed ? max + 1 + random.nextInt(headroom) : max;
+                mutable.set(holder, level);
+            }
+        });
     }
 
     private static List<? extends String> gearSource;
@@ -100,7 +145,7 @@ public final class LegendaryLoot {
         List<Item> items = new ArrayList<>();
         for (String id : ids) {
             ResourceLocation key = ResourceLocation.tryParse(id);
-            Item item = key == null ? null : ForgeRegistries.ITEMS.getValue(key);
+            Item item = key == null ? null : BuiltInRegistries.ITEM.get(key);
             if (item != null && item != Items.AIR) {
                 items.add(item);
             }
@@ -109,34 +154,5 @@ public final class LegendaryLoot {
             items.add(fallback);
         }
         return List.copyOf(items);
-    }
-
-    /**
-     * Pushes the rolled enchantments past their vanilla ceiling - Protection VI, Sharpness VII
-     * and the like. Minecraft honours levels above the maximum when they are set directly;
-     * they simply cannot be reached through an enchanting table or an anvil.
-     */
-    private static void overcharge(ItemStack stack, RandomSource random, boolean mutated) {
-        if (!WastelandConfig.OVERCHARGED_ENCHANTMENTS.get()) {
-            return;
-        }
-
-        Map<Enchantment, Integer> enchantments = new HashMap<>(EnchantmentHelper.getEnchantments(stack));
-        if (enchantments.isEmpty()) {
-            enchantments.put(Enchantments.UNBREAKING, Enchantments.UNBREAKING.getMaxLevel());
-        }
-
-        int headroom = mutated ? 3 : 2;
-        boolean boostedOne = false;
-        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-            // The first is always overcharged; the rest are a coin flip, so drops vary.
-            if (boostedOne && random.nextBoolean()) {
-                continue;
-            }
-            entry.setValue(entry.getKey().getMaxLevel() + 1 + random.nextInt(headroom));
-            boostedOne = true;
-        }
-
-        EnchantmentHelper.setEnchantments(enchantments, stack);
     }
 }

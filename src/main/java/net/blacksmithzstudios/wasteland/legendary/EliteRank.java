@@ -1,7 +1,9 @@
 package net.blacksmithzstudios.wasteland.legendary;
 
 import net.blacksmithzstudios.wasteland.WastelandConfig;
+import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.UUID;
+
 
 /**
  * Higher-level enemies, the way Fallout marks something well above your level: far more
@@ -37,10 +39,14 @@ public enum EliteRank {
     /** The skull Fallout puts beside an enemy far above your level. U+2620. */
     public static final String SKULL = "☠";
 
-    private static final UUID HEALTH_ID = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0011");
-    private static final UUID DAMAGE_ID = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0012");
-    private static final UUID ARMOR_ID  = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0013");
-    private static final UUID KNOCKBACK_ID = UUID.fromString("6f3a1d0e-8f21-4a55-9b1c-2f1d7c1a0014");
+    private static final ResourceLocation HEALTH_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_health");
+    private static final ResourceLocation DAMAGE_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_damage");
+    private static final ResourceLocation ARMOR_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_armor");
+    private static final ResourceLocation KNOCKBACK_ID =
+            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_knockback");
 
     private final String title;
     private final ChatFormatting color;
@@ -93,12 +99,11 @@ public enum EliteRank {
     }
 
     public void applyTo(LivingEntity entity, double strength) {
-        addMultiplier(entity.getAttribute(Attributes.MAX_HEALTH), HEALTH_ID, "wasteland_elite_health", healthBonus * strength);
-        addMultiplier(entity.getAttribute(Attributes.ATTACK_DAMAGE), DAMAGE_ID, "wasteland_elite_damage", damageBonus * strength);
-        addFlat(entity.getAttribute(Attributes.ARMOR), ARMOR_ID, "wasteland_elite_armor", armorBonus * strength);
+        addMultiplier(entity.getAttribute(Attributes.MAX_HEALTH), HEALTH_ID, healthBonus * strength);
+        addMultiplier(entity.getAttribute(Attributes.ATTACK_DAMAGE), DAMAGE_ID, damageBonus * strength);
+        addFlat(entity.getAttribute(Attributes.ARMOR), ARMOR_ID, armorBonus * strength);
         // Heavier enemies should not be trivially chain-knocked away from you.
-        addFlat(entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE), KNOCKBACK_ID, "wasteland_elite_kb",
-                Math.min(0.8, 0.15 * (ordinal() + 1)));
+        addFlat(entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE), KNOCKBACK_ID, Math.min(0.8, 0.15 * (ordinal() + 1)));
         entity.setHealth(entity.getMaxHealth());
 
         if (entity instanceof Mob mob) {
@@ -136,21 +141,21 @@ public enum EliteRank {
         }
     }
 
-    private static void addMultiplier(AttributeInstance attribute, UUID id, String name, double amount) {
+    private static void addMultiplier(AttributeInstance attribute, ResourceLocation id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
-        attribute.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_BASE));
+        attribute.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
     }
 
-    private static void addFlat(AttributeInstance attribute, UUID id, String name, double amount) {
+    private static void addFlat(AttributeInstance attribute, ResourceLocation id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
-        attribute.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADDITION));
+        attribute.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
     }
 
-    private static void removeModifier(AttributeInstance attribute, UUID id) {
+    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
         if (attribute != null && attribute.getModifier(id) != null) {
             attribute.removeModifier(id);
         }

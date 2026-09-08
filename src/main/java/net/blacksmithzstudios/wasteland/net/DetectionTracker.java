@@ -6,11 +6,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ import java.util.UUID;
  * Works out, on the server, whether anything has noticed the player, and tells their client
  * when the answer changes.
  */
-@Mod.EventBusSubscriber(modid = WastelandMod.MOD_ID)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class DetectionTracker {
 
     public static final int HIDDEN = 0;
@@ -36,8 +36,8 @@ public final class DetectionTracker {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
         if (player.tickCount % INTERVAL != 0 || !WastelandConfig.DETECTION_ENABLED.get()) {
@@ -51,8 +51,7 @@ public final class DetectionTracker {
             return;
         }
         lastSent.put(player.getUUID(), packed);
-        WastelandNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
-                new DetectionPacket(packed / 1000, packed % 1000));
+        PacketDistributor.sendToPlayer(player, new DetectionPayload(packed / 1000, packed % 1000));
     }
 
     @SubscribeEvent
