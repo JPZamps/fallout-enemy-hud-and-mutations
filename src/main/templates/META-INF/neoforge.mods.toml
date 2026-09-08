@@ -11,6 +11,8 @@ description = '''${mod_description}'''
 logoFile = "logo.png"
 # Pixel art: render it sharp instead of smoothed.
 logoBlur = false
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/fallout-enemy-hud-and-mutations"
+issueTrackerURL = "https://github.com/JPZamps/fallout-enemy-hud-and-mutations/issues"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
