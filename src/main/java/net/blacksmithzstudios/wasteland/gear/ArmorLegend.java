@@ -80,7 +80,7 @@ public enum ArmorLegend {
             case UNYIELDING -> {
                 // Stronger the worse things are going.
                 if (wearer.getHealth() <= wearer.getMaxHealth() * 0.3F) {
-                    wearer.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1, true, false));
+                    wearer.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 60, 1, true, false));
                 }
             }
             case CHAMELEON -> {
@@ -88,7 +88,7 @@ public enum ArmorLegend {
                     wearer.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 40, 0, true, false));
                 }
             }
-            case POWERED -> wearer.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60, 0, true, false));
+            case POWERED -> wearer.addEffect(new MobEffectInstance(MobEffects.SPEED, 60, 0, true, false));
             default -> {
             }
         }

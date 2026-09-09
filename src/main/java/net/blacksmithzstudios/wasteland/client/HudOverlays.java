@@ -3,7 +3,7 @@ package net.blacksmithzstudios.wasteland.client;
 import net.blacksmithzstudios.wasteland.WastelandClientConfig;
 import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -17,13 +17,13 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
  * silently shared an event wrapper in an earlier version, and one overlay registered twice
  * while the other never registered at all.
  */
-@EventBusSubscriber(modid = WastelandMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID, value = Dist.CLIENT)
 public final class HudOverlays {
 
-    private static final ResourceLocation TARGET =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "target");
-    private static final ResourceLocation DETECTION =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "detection");
+    private static final Identifier TARGET =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "target");
+    private static final Identifier DETECTION =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "detection");
 
     private HudOverlays() {
     }

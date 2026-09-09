@@ -2,7 +2,7 @@ package net.blacksmithzstudios.wasteland.legendary;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.blacksmithzstudios.wasteland.WastelandConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -83,7 +83,7 @@ public final class MobLootRules {
         }
 
         String mobId = parts[0].trim();
-        ResourceLocation itemKey = ResourceLocation.tryParse(parts[1].trim());
+        Identifier itemKey = Identifier.tryParse(parts[1].trim());
         Item item = itemKey == null ? null : BuiltInRegistries.ITEM.get(itemKey);
         if (item == null || item == Items.AIR) {
             return null; // an item no installed mod provides
@@ -115,7 +115,7 @@ public final class MobLootRules {
     }
 
     private static String idOf(LivingEntity entity) {
-        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+        Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return key != null ? key.toString() : "";
     }
 }

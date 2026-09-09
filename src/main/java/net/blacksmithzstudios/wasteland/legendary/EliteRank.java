@@ -3,7 +3,7 @@ package net.blacksmithzstudios.wasteland.legendary;
 import net.blacksmithzstudios.wasteland.WastelandConfig;
 import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,14 +39,14 @@ public enum EliteRank {
     /** The skull Fallout puts beside an enemy far above your level. U+2620. */
     public static final String SKULL = "☠";
 
-    private static final ResourceLocation HEALTH_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_health");
-    private static final ResourceLocation DAMAGE_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_damage");
-    private static final ResourceLocation ARMOR_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_armor");
-    private static final ResourceLocation KNOCKBACK_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_knockback");
+    private static final Identifier HEALTH_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_health");
+    private static final Identifier DAMAGE_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_damage");
+    private static final Identifier ARMOR_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_armor");
+    private static final Identifier KNOCKBACK_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_elite_knockback");
 
     private final String title;
     private final ChatFormatting color;
@@ -164,21 +164,21 @@ public enum EliteRank {
         }
     }
 
-    private static void addMultiplier(AttributeInstance attribute, ResourceLocation id, double amount) {
+    private static void addMultiplier(AttributeInstance attribute, Identifier id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
         attribute.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
     }
 
-    private static void addFlat(AttributeInstance attribute, ResourceLocation id, double amount) {
+    private static void addFlat(AttributeInstance attribute, Identifier id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
         attribute.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
     }
 
-    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
+    private static void removeModifier(AttributeInstance attribute, Identifier id) {
         if (attribute != null && attribute.getModifier(id) != null) {
             attribute.removeModifier(id);
         }

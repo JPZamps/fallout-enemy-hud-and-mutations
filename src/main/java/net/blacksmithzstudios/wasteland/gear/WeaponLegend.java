@@ -74,7 +74,7 @@ public enum WeaponLegend {
             case FREEZING -> {
                 // Vanilla powder-snow freezing, reused as a weapon effect.
                 victim.setTicksFrozen(Math.min(victim.getTicksRequiredToFreeze() + 60, victim.getTicksFrozen() + 140));
-                victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+                victim.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 1));
             }
 
             case WOUNDING -> victim.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
@@ -83,7 +83,7 @@ public enum WeaponLegend {
 
             case VAMPIRE -> attacker.heal(amount * 0.25F);
 
-            case CRIPPLING -> victim.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 120, 1));
+            case CRIPPLING -> victim.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 120, 1));
 
             case STAGGERING -> victim.knockback(0.8F,
                     attacker.getX() - victim.getX(), attacker.getZ() - victim.getZ());

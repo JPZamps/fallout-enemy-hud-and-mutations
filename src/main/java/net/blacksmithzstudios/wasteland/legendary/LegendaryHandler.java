@@ -202,9 +202,9 @@ public class LegendaryHandler {
             rename(victim);
         }
         victim.setHealth(victim.getMaxHealth());
-        victim.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 1));
-        victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 0));
-        victim.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 0));
+        victim.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 600, 1));
+        victim.addEffect(new MobEffectInstance(MobEffects.SPEED, 600, 0));
+        victim.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 0));
 
         Level level = victim.level();
         level.playSound(null, victim.blockPosition(), SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.6F, 1.4F);

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * One tiny channel, for one tiny fact: the detection state, sent only when it changes.
  */
-@EventBusSubscriber(modid = WastelandMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class WastelandNetwork {
 
     private WastelandNetwork() {

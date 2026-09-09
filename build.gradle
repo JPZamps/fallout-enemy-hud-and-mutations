@@ -12,8 +12,9 @@ base {
     archivesName = 'FalloutEnemyHUD'
 }
 
-// Minecraft 1.21.1 runs on Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+// Minecraft 26.2 requires Java 25. Gradle provisions the toolchain automatically
+// through the foojay resolver declared in settings.gradle.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neo_version

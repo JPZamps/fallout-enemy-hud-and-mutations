@@ -5,7 +5,7 @@ import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Carries the player's detection state to their client, plus how close the nearest threat is.
@@ -21,7 +21,7 @@ public record DetectionPayload(int state, int closeness) implements CustomPacket
 
     public static final CustomPacketPayload.Type<DetectionPayload> TYPE =
             new CustomPacketPayload.Type<>(
-                    ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "detection"));
+                    Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "detection"));
 
     public static final StreamCodec<ByteBuf, DetectionPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, DetectionPayload::state,

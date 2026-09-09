@@ -8,7 +8,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ArmorItem;
@@ -171,7 +171,7 @@ public final class LegendaryLoot {
     private static List<Item> resolve(List<? extends String> ids, Item fallback) {
         List<Item> items = new ArrayList<>();
         for (String id : ids) {
-            ResourceLocation key = ResourceLocation.tryParse(id);
+            Identifier key = Identifier.tryParse(id);
             Item item = key == null ? null : BuiltInRegistries.ITEM.get(key);
             if (item != null && item != Items.AIR) {
                 items.add(item);

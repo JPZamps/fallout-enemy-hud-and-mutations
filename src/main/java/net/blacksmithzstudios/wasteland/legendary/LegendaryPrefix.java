@@ -2,7 +2,7 @@ package net.blacksmithzstudios.wasteland.legendary;
 
 import net.blacksmithzstudios.wasteland.WastelandMod;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,14 +29,14 @@ public enum LegendaryPrefix {
     RELENTLESS("Relentless", ChatFormatting.LIGHT_PURPLE,0.8,  0.5,  0.15, 4.0, ParticleTypes.END_ROD);
 
     /** Fixed ids so the modifiers are idempotent across a save/load cycle. */
-    private static final ResourceLocation HEALTH_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_health");
-    private static final ResourceLocation DAMAGE_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_damage");
-    private static final ResourceLocation SPEED_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_speed");
-    private static final ResourceLocation ARMOR_ID =
-            ResourceLocation.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_armor");
+    private static final Identifier HEALTH_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_health");
+    private static final Identifier DAMAGE_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_damage");
+    private static final Identifier SPEED_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_speed");
+    private static final Identifier ARMOR_ID =
+            Identifier.fromNamespaceAndPath(WastelandMod.MOD_ID, "wasteland_armor");
 
     private final String displayName;
     private final ChatFormatting color;
@@ -105,13 +105,13 @@ public enum LegendaryPrefix {
         entity.setHealth(Math.min(entity.getHealth(), entity.getMaxHealth()));
     }
 
-    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
+    private static void removeModifier(AttributeInstance attribute, Identifier id) {
         if (attribute != null && attribute.getModifier(id) != null) {
             attribute.removeModifier(id);
         }
     }
 
-    private static void addMultiplier(AttributeInstance attribute, ResourceLocation id, double amount) {
+    private static void addMultiplier(AttributeInstance attribute, Identifier id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
@@ -119,7 +119,7 @@ public enum LegendaryPrefix {
                 new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
     }
 
-    private static void addFlat(AttributeInstance attribute, ResourceLocation id, double amount) {
+    private static void addFlat(AttributeInstance attribute, Identifier id, double amount) {
         if (attribute == null || amount == 0.0 || attribute.getModifier(id) != null) {
             return;
         }
