@@ -21,7 +21,7 @@ public final class LegendaryData {
         if (!data.contains(PREFIX_KEY)) {
             return null;
         }
-        return LegendaryPrefix.byName(data.getString(PREFIX_KEY));
+        return LegendaryPrefix.byName(data.getStringOr(PREFIX_KEY, ""));
     }
 
     public static void setPrefix(LivingEntity entity, LegendaryPrefix prefix) {
@@ -30,7 +30,7 @@ public final class LegendaryData {
 
     /** A legendary mutates exactly once per lifetime, as in Fallout. */
     public static boolean hasMutated(LivingEntity entity) {
-        return entity.getPersistentData().getBoolean(MUTATED_KEY);
+        return entity.getPersistentData().getBooleanOr(MUTATED_KEY, false);
     }
 
     public static void markMutated(LivingEntity entity) {
@@ -40,7 +40,7 @@ public final class LegendaryData {
     /** True once the entity has been processed, legendary or not, so we only roll once. */
     public static boolean wasRolled(LivingEntity entity) {
         return entity.getPersistentData().contains(PREFIX_KEY)
-                || entity.getPersistentData().getBoolean("WastelandRolled");
+                || entity.getPersistentData().getBooleanOr("WastelandRolled", false);
     }
 
     public static void markRolled(LivingEntity entity) {
@@ -51,7 +51,7 @@ public final class LegendaryData {
 
     public static EliteRank eliteOf(LivingEntity entity) {
         CompoundTag data = entity.getPersistentData();
-        return data.contains(ELITE_KEY) ? EliteRank.byName(data.getString(ELITE_KEY)) : null;
+        return data.contains(ELITE_KEY) ? EliteRank.byName(data.getStringOr(ELITE_KEY, "")) : null;
     }
 
     public static void setElite(LivingEntity entity, EliteRank rank) {
@@ -76,7 +76,7 @@ public final class LegendaryData {
 
     /** Whether the one mutation roll has already been spent on this mob. */
     public static boolean mutationRolled(LivingEntity entity) {
-        return entity.getPersistentData().getBoolean("WastelandMutationRolled");
+        return entity.getPersistentData().getBooleanOr("WastelandMutationRolled", false);
     }
 
     public static void markMutationRolled(LivingEntity entity) {

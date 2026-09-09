@@ -27,8 +27,9 @@ public class LegendaryLootModifier extends LootModifier {
     public static final MapCodec<LegendaryLootModifier> CODEC = RecordCodecBuilder.mapCodec(
             instance -> LootModifier.codecStart(instance).apply(instance, LegendaryLootModifier::new));
 
-    public LegendaryLootModifier(LootItemCondition[] conditions) {
-        super(conditions);
+    /** 26.2 gives every loot modifier an explicit priority alongside its conditions. */
+    public LegendaryLootModifier(LootItemCondition[] conditions, int priority) {
+        super(conditions, priority);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class LegendaryLootModifier extends LootModifier {
             return loot;
         }
 
-        Entity killed = context.getParamOrNull(LootContextParams.THIS_ENTITY);
+        Entity killed = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (!(killed instanceof LivingEntity entity)) {
             return loot;
         }

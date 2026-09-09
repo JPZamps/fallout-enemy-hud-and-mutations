@@ -11,8 +11,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -62,7 +63,7 @@ public final class LegendaryLoot {
 
             // The signature piece carries a legendary effect of its own, which also renames it.
             if (WastelandConfig.GEAR_LEGENDS_ENABLED.get()) {
-                GearLegends.applyRandom(signature, random, signature.getItem() instanceof ArmorItem);
+                GearLegends.applyRandom(signature, random, isArmour(signature));
             }
             drops.add(signature);
         }
@@ -72,6 +73,20 @@ public final class LegendaryLoot {
         }
 
         return drops;
+    }
+
+    /**
+     * What counts as armour in 26.2: ArmorItem no longer exists, and a piece is armour
+     * because it carries an equippable component pointing at an armour slot.
+     */
+    private static boolean isArmour(ItemStack stack) {
+        Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
+        if (equippable == null) {
+            return false;
+        }
+        EquipmentSlot slot = equippable.slot();
+        return slot == EquipmentSlot.HEAD || slot == EquipmentSlot.CHEST
+                || slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET;
     }
 
     /**
@@ -172,7 +187,7 @@ public final class LegendaryLoot {
         List<Item> items = new ArrayList<>();
         for (String id : ids) {
             Identifier key = Identifier.tryParse(id);
-            Item item = key == null ? null : BuiltInRegistries.ITEM.get(key);
+            Item item = key == null ? null : BuiltInRegistries.ITEM.getValue(key);
             if (item != null && item != Items.AIR) {
                 items.add(item);
             }

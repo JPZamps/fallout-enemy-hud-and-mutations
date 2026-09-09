@@ -6,7 +6,7 @@ import net.blacksmithzstudios.wasteland.legendary.MobEligibility;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,9 +52,9 @@ public final class TargetHud {
     }
 
     /** Registered by {@link HudOverlays}. */
-    static void render(GuiGraphics graphics, int screenWidth, float partialTick) {
+    static void render(GuiGraphicsExtractor graphics, int screenWidth, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || minecraft.options.hideGui || minecraft.player.isSpectator()) {
+        if (minecraft.player == null || minecraft.gui.hud.isHidden() || minecraft.player.isSpectator()) {
             return;
         }
         LivingEntity target = pickTarget(minecraft, partialTick);
@@ -114,7 +114,7 @@ public final class TargetHud {
      * or Ender Dragon on screen the readout would otherwise sit right on top of them.
      */
     private static int bossBarOffset(Minecraft minecraft) {
-        int bars = minecraft.gui.getBossOverlay().events.size();
+        int bars = minecraft.gui.hud.getBossOverlay().events.size();
         return bars == 0 ? 0 : BOSS_BAR_TOP + bars * BOSS_BAR_HEIGHT;
     }
 
@@ -154,7 +154,7 @@ public final class TargetHud {
      * The open box holding the bar: a floor directly under it and two arms up its sides,
      * nothing across the top. Flush with the bar and in the same colour as the health left.
      */
-    private static void drawBracket(GuiGraphics graphics, int left, int barTop,
+    private static void drawBracket(GuiGraphicsExtractor graphics, int left, int barTop,
                                     int barWidth, int barHeight, int color) {
         int outerLeft = left - 1;
         int outerRight = left + barWidth + 1;
@@ -167,22 +167,22 @@ public final class TargetHud {
     }
 
     /** Scaled-down text with a light black rim on the four cardinal sides. */
-    private static void drawOutlinedName(GuiGraphics graphics, Font font, String name,
+    private static void drawOutlinedName(GuiGraphicsExtractor graphics, Font font, String name,
                                          int centreX, int top, float scale, int color) {
         Component label = Component.literal(name).withStyle(ChatFormatting.BOLD);
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, 1.0F);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(scale, scale);
 
         int x = Math.round(centreX / scale) - font.width(label) / 2;
         int y = Math.round(top / scale);
 
-        graphics.drawString(font, label, x - 1, y, OUTLINE, false);
-        graphics.drawString(font, label, x + 1, y, OUTLINE, false);
-        graphics.drawString(font, label, x, y - 1, OUTLINE, false);
-        graphics.drawString(font, label, x, y + 1, OUTLINE, false);
-        graphics.drawString(font, label, x, y, color, false);
+        graphics.text(font, label, x - 1, y, OUTLINE, false);
+        graphics.text(font, label, x + 1, y, OUTLINE, false);
+        graphics.text(font, label, x, y - 1, OUTLINE, false);
+        graphics.text(font, label, x, y + 1, OUTLINE, false);
+        graphics.text(font, label, x, y, color, false);
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

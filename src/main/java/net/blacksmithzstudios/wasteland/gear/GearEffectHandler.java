@@ -5,6 +5,7 @@ import net.blacksmithzstudios.wasteland.WastelandConfig;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.blacksmithzstudios.wasteland.WastelandMod;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -20,6 +21,11 @@ import org.slf4j.Logger;
  */
 @EventBusSubscriber(modid = WastelandMod.MOD_ID)
 public final class GearEffectHandler {
+
+    /** The four armour slots, since getArmorSlots() is gone in 26.2. */
+    private static final EquipmentSlot[] ARMOR_SLOTS = {
+            EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
+    };
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -63,8 +69,8 @@ public final class GearEffectHandler {
             }
         }
 
-        for (ItemStack piece : victim.getArmorSlots()) {
-            ArmorLegend armor = GearLegends.armorOf(piece);
+        for (EquipmentSlot slot : ARMOR_SLOTS) {
+            ArmorLegend armor = GearLegends.armorOf(victim.getItemBySlot(slot));
             if (armor != null) {
                 amount = armor.onHurt(victim, attacker, amount, !fromThorns);
             }
@@ -79,8 +85,8 @@ public final class GearEffectHandler {
             return;
         }
         float multiplier = 1.0F;
-        for (ItemStack piece : event.getEntity().getArmorSlots()) {
-            ArmorLegend armor = GearLegends.armorOf(piece);
+        for (EquipmentSlot slot : ARMOR_SLOTS) {
+            ArmorLegend armor = GearLegends.armorOf(event.getEntity().getItemBySlot(slot));
             if (armor != null) {
                 multiplier = Math.min(multiplier, armor.fallMultiplier());
             }
@@ -100,8 +106,8 @@ public final class GearEffectHandler {
                 || !WastelandConfig.GEAR_LEGENDS_ENABLED.get()) {
             return;
         }
-        for (ItemStack piece : entity.getArmorSlots()) {
-            ArmorLegend armor = GearLegends.armorOf(piece);
+        for (EquipmentSlot slot : ARMOR_SLOTS) {
+            ArmorLegend armor = GearLegends.armorOf(entity.getItemBySlot(slot));
             if (armor != null) {
                 armor.onWornTick(entity);
             }

@@ -2,7 +2,7 @@ package net.blacksmithzstudios.wasteland.client;
 
 import net.blacksmithzstudios.wasteland.WastelandClientConfig;
 import net.blacksmithzstudios.wasteland.WastelandMod;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,13 +30,13 @@ public final class HudOverlays {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, TARGET, (GuiGraphics graphics, net.minecraft.client.DeltaTracker delta) -> {
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, TARGET, (GuiGraphicsExtractor graphics, net.minecraft.client.DeltaTracker delta) -> {
             if (WastelandClientConfig.HUD_ENABLED.get()) {
                 TargetHud.render(graphics, graphics.guiWidth(), delta.getGameTimeDeltaPartialTick(false));
             }
         });
 
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, DETECTION, (GuiGraphics graphics, net.minecraft.client.DeltaTracker delta) -> {
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, DETECTION, (GuiGraphicsExtractor graphics, net.minecraft.client.DeltaTracker delta) -> {
             if (WastelandClientConfig.DETECTION_INDICATOR.get()) {
                 DetectionHud.render(graphics, graphics.guiWidth(), graphics.guiHeight());
             }

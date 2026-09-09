@@ -5,7 +5,7 @@ import net.blacksmithzstudios.wasteland.WastelandColors;
 import net.blacksmithzstudios.wasteland.net.DetectionTracker;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -38,9 +38,9 @@ public final class DetectionHud {
     }
 
     /** Registered by {@link HudOverlays}. */
-    static void render(GuiGraphics graphics, int screenWidth, int screenHeight) {
+    static void render(GuiGraphicsExtractor graphics, int screenWidth, int screenHeight) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || minecraft.options.hideGui || minecraft.player.isSpectator()) {
+        if (minecraft.player == null || minecraft.gui.hud.isHidden() || minecraft.player.isSpectator()) {
             return;
         }
         if (WastelandClientConfig.DETECTION_ONLY_SNEAKING.get() && !minecraft.player.isCrouching()) {
@@ -71,8 +71,8 @@ public final class DetectionHud {
         Component open = Component.literal("[").withStyle(ChatFormatting.BOLD);
         Component close = Component.literal("]").withStyle(ChatFormatting.BOLD);
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(SCALE, SCALE, 1.0F);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(SCALE, SCALE);
 
         int centreX = Math.round((screenWidth / 2.0F) / SCALE);
         int y = Math.round((screenHeight / 2.0F - ABOVE_CROSSHAIR) / SCALE);
@@ -82,16 +82,16 @@ public final class DetectionHud {
         draw(graphics, open, centreX - halfLabel - gap - minecraft.font.width(open), y, color);
         draw(graphics, close, centreX + halfLabel + gap, y, color);
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     /** Draws the glyph with a light black rim on the four cardinal sides. */
-    private static void draw(GuiGraphics graphics, Component text, int x, int y, int color) {
+    private static void draw(GuiGraphicsExtractor graphics, Component text, int x, int y, int color) {
         Minecraft minecraft = Minecraft.getInstance();
-        graphics.drawString(minecraft.font, text, x - 1, y, OUTLINE, false);
-        graphics.drawString(minecraft.font, text, x + 1, y, OUTLINE, false);
-        graphics.drawString(minecraft.font, text, x, y - 1, OUTLINE, false);
-        graphics.drawString(minecraft.font, text, x, y + 1, OUTLINE, false);
-        graphics.drawString(minecraft.font, text, x, y, color, false);
+        graphics.text(minecraft.font, text, x - 1, y, OUTLINE, false);
+        graphics.text(minecraft.font, text, x + 1, y, OUTLINE, false);
+        graphics.text(minecraft.font, text, x, y - 1, OUTLINE, false);
+        graphics.text(minecraft.font, text, x, y + 1, OUTLINE, false);
+        graphics.text(minecraft.font, text, x, y, color, false);
     }
 }

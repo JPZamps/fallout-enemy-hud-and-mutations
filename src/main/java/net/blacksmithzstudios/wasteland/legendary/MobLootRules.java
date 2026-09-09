@@ -84,7 +84,7 @@ public final class MobLootRules {
 
         String mobId = parts[0].trim();
         Identifier itemKey = Identifier.tryParse(parts[1].trim());
-        Item item = itemKey == null ? null : BuiltInRegistries.ITEM.get(itemKey);
+        Item item = itemKey == null ? null : BuiltInRegistries.ITEM.getValue(itemKey);
         if (item == null || item == Items.AIR) {
             return null; // an item no installed mod provides
         }

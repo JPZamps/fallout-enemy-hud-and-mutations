@@ -85,8 +85,16 @@ public enum WeaponLegend {
 
             case CRIPPLING -> victim.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 120, 1));
 
-            case STAGGERING -> victim.knockback(0.8F,
-                    attacker.getX() - victim.getX(), attacker.getZ() - victim.getZ());
+            case STAGGERING -> {
+                // Shoved directly away from the attacker. Done by hand because knockback()
+                // changed shape in 26.2 and now wants a damage source of its own.
+                double dx = victim.getX() - attacker.getX();
+                double dz = victim.getZ() - attacker.getZ();
+                double length = Math.sqrt(dx * dx + dz * dz);
+                if (length > 1.0E-4) {
+                    victim.push(dx / length * 0.8, 0.2, dz / length * 0.8);
+                }
+            }
 
             case EXECUTIONER -> {
                 // Hits harder the closer the target is to dying.

@@ -1,4 +1,5 @@
 {
   "type": "wasteland:legendary_bonus",
-  "conditions": []
+  "conditions": [],
+  "priority": 0
 }

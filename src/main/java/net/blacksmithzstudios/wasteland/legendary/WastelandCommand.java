@@ -33,7 +33,7 @@ public final class WastelandCommand {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("mutate")
-                .requires(source -> source.hasPermission(2))
+                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                 .then(Commands.literal("legendary")
                         .then(Commands.argument("targets", EntityArgument.entities())
                                 .executes(context -> makeLegendary(context, null))
