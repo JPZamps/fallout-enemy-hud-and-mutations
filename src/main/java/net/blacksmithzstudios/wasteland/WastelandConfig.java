@@ -56,6 +56,7 @@ public class WastelandConfig {
     // ---- detection (server side) ----
     public static final ModConfigSpec.BooleanValue DETECTION_ENABLED;
     public static final ModConfigSpec.DoubleValue DETECTION_RANGE;
+    public static final ModConfigSpec.DoubleValue DANGER_RANGE;
 
     static {
         BUILDER.comment("When mobs become legendary and when they mutate.").push("mutation");
@@ -222,8 +223,13 @@ public class WastelandConfig {
                 .comment("Master switch: when off, the server never computes or sends detection state.")
                 .define("detectionEnabled", true);
         DETECTION_RANGE = BUILDER
-                .comment("Radius the detection readout watches, in blocks.")
+                .comment("Radius within which a hostile that has not noticed you reads as CAUTION.")
                 .defineInRange("detectionRange", 15.0, 4.0, 128.0);
+        DANGER_RANGE = BUILDER
+                .comment("Radius within which a hostile that is hunting you reads as DANGER.",
+                         "Wider on purpose: pillagers and skeletons lock on from well beyond",
+                         "the distance at which a mob standing around is worth noticing.")
+                .defineInRange("dangerRange", 48.0, 4.0, 128.0);
         BUILDER.pop();
     }
 
