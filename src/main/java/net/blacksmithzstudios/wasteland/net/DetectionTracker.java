@@ -68,28 +68,44 @@ public final class DetectionTracker {
      * @return state * 1000 + closeness, where closeness runs 0 (at the edge) to 100 (on top of you)
      */
     private static int compute(ServerPlayer player) {
-        double range = WastelandConfig.DETECTION_RANGE.get();
-        AABB box = player.getBoundingBox().inflate(range);
+        double cautionRange = WastelandConfig.DETECTION_RANGE.get();
+        double dangerRange = Math.max(cautionRange, WastelandConfig.DANGER_RANGE.get());
+
+        // Scan out to whichever radius is larger: something can hunt you from well beyond
+        // the distance at which a mob merely standing there is worth a CAUTION.
+        AABB box = player.getBoundingBox().inflate(dangerRange);
 
         int state = HIDDEN;
-        double nearestSqr = Double.MAX_VALUE;
+        double nearestHunterSqr = Double.MAX_VALUE;
+        double nearestNearbySqr = Double.MAX_VALUE;
 
         for (Mob mob : player.level().getEntitiesOfClass(Mob.class, box,
                 candidate -> candidate.isAlive() && candidate instanceof Enemy)) {
             double distanceSqr = mob.distanceToSqr(player);
-            if (distanceSqr > range * range) {
-                continue; // the box is a cube; the radius is a sphere
-            }
-            nearestSqr = Math.min(nearestSqr, distanceSqr);
 
-            // Anything in the radius is at least a CAUTION; one that has found you is DANGER.
-            state = Math.max(state, mob.getTarget() == player ? DANGER : CAUTION);
+            // Being hunted is a danger at any distance inside the wider radius.
+            if (mob.getTarget() == player && distanceSqr <= dangerRange * dangerRange) {
+                state = DANGER;
+                nearestHunterSqr = Math.min(nearestHunterSqr, distanceSqr);
+                continue;
+            }
+
+            // Otherwise it only counts once it is genuinely close. The box is a cube and the
+            // radius is a sphere, so the corners have to be discarded.
+            if (distanceSqr <= cautionRange * cautionRange) {
+                state = Math.max(state, CAUTION);
+                nearestNearbySqr = Math.min(nearestNearbySqr, distanceSqr);
+            }
         }
+
+        // The brackets track whatever set the state, measured against that state's own range.
+        double nearestSqr = state == DANGER ? nearestHunterSqr : nearestNearbySqr;
+        double against = state == DANGER ? dangerRange : cautionRange;
 
         int closeness = 0;
         if (nearestSqr < Double.MAX_VALUE) {
             double nearest = Math.sqrt(nearestSqr);
-            closeness = (int) Math.round(Math.max(0.0, Math.min(1.0, 1.0 - nearest / range)) * 100);
+            closeness = (int) Math.round(Math.max(0.0, Math.min(1.0, 1.0 - nearest / against)) * 100);
         }
         return state * 1000 + closeness;
     }
