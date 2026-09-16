@@ -146,6 +146,11 @@ public class WastelandConfig {
                         "minecraft:iron_axe", "minecraft:diamond_axe",
                         "minecraft:bow", "minecraft:crossbow", "minecraft:trident", "minecraft:shield",
                         "minecraft:mace",
+                        "minecraft:wooden_spear", "minecraft:stone_spear", "minecraft:copper_spear",
+                        "minecraft:iron_spear", "minecraft:golden_spear", "minecraft:diamond_spear",
+                        "minecraft:copper_sword", "minecraft:copper_axe",
+                        "minecraft:copper_helmet", "minecraft:copper_chestplate",
+                        "minecraft:copper_leggings", "minecraft:copper_boots",
                         "minecraft:leather_helmet", "minecraft:leather_chestplate",
                         "minecraft:leather_leggings", "minecraft:leather_boots",
                         "minecraft:chainmail_helmet", "minecraft:chainmail_chestplate",
@@ -173,7 +178,8 @@ public class WastelandConfig {
                         "minecraft:experience_bottle", "minecraft:torch",
                         "minecraft:wind_charge", "minecraft:breeze_rod",
                         "minecraft:ominous_bottle", "minecraft:trial_key",
-                        "minecraft:armadillo_scute", "minecraft:wolf_armor"
+                        "minecraft:armadillo_scute", "minecraft:wolf_armor",
+                        "minecraft:copper_nugget", "minecraft:resin_clump"
                 ), entry -> entry instanceof String);
         MOB_LOOT_RULES = BUILDER
                 .comment("Per-mob drops for legendary kills, one rule per line.",
