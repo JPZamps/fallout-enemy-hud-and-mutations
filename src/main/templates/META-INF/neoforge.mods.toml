@@ -8,9 +8,9 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
-logoFile = "logo.png"
-# Pixel art: render it sharp instead of smoothed.
-logoBlur = false
+# 26.2 split the old logoFile in two: a wide banner and a square icon.
+# Ours is square pixel art, so it is the icon.
+iconFile = "logo.png"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/fallout-enemy-hud-and-mutations"
 issueTrackerURL = "https://github.com/JPZamps/fallout-enemy-hud-and-mutations/issues"
 
