@@ -42,6 +42,10 @@ public class LegendaryLootModifier extends LootModifier {
             return loot;
         }
 
+        // Rolled first: a plain boss is neither legendary nor elite, and would never reach
+        // the rest of this method.
+        loot.addAll(NetherSpoils.roll(entity, context.getRandom()));
+
         LegendaryPrefix prefix = LegendaryData.prefixOf(entity);
         EliteRank elite = LegendaryData.eliteOf(entity);
         if (prefix == null && elite == null) {

@@ -39,6 +39,9 @@ public class WastelandConfig {
     public static final ModConfigSpec.BooleanValue DOUBLE_VANILLA_LOOT;
     public static final ModConfigSpec.BooleanValue ELITE_LOOT;
     public static final ModConfigSpec.BooleanValue BONUS_EXPERIENCE;
+    public static final ModConfigSpec.BooleanValue NETHERITE_SCRAP_ENABLED;
+    public static final ModConfigSpec.DoubleValue NETHERITE_SCRAP_CHANCE;
+    public static final ModConfigSpec.DoubleValue NETHERITE_SCRAP_BOSS_CHANCE;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
@@ -133,6 +136,16 @@ public class WastelandConfig {
         BONUS_EXPERIENCE = BUILDER
                 .comment("Legendary and elite kills award more experience, scaled the same way.")
                 .define("bonusExperience", true);
+        NETHERITE_SCRAP_ENABLED = BUILDER
+                .comment("Bosses, legendaries and elites of rank Elite or higher can drop",
+                         "netherite scrap when killed in the Nether.")
+                .define("netheriteScrapEnabled", true);
+        NETHERITE_SCRAP_CHANCE = BUILDER
+                .comment("Chance for a legendary or high elite. Doubles for a mutated kill.")
+                .defineInRange("netheriteScrapChance", 0.10, 0.0, 1.0);
+        NETHERITE_SCRAP_BOSS_CHANCE = BUILDER
+                .comment("Chance for a boss, which drops one or two scraps.")
+                .defineInRange("netheriteScrapBossChance", 0.5, 0.0, 1.0);
         OVERCHARGED_ENCHANTMENTS = BUILDER
                 .comment("Let drops carry enchantments past their vanilla maximum,",
                          "such as Protection VI or Sharpness VII.")
