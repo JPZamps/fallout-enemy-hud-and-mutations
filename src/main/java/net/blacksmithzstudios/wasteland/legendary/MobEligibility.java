@@ -20,6 +20,15 @@ public final class MobEligibility {
     private MobEligibility() {
     }
 
+    /** The two vanilla bosses, for the rewards that are specific to them. */
+    public static EntityType<?> witherType() {
+        return EntityTypes.WITHER;
+    }
+
+    public static EntityType<?> enderDragonType() {
+        return EntityTypes.ENDER_DRAGON;
+    }
+
     /** Bosses draw their own bar; a second one on top would be noise. */
     public static boolean isBoss(LivingEntity entity) {
         EntityType<?> type = entity.getType();
