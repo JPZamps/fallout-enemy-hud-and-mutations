@@ -271,6 +271,10 @@ public class LegendaryHandler {
         if (entity.level().isClientSide()) {
             return;
         }
+        // Before the early exit: a boss need not be legendary to be worth looting, and the
+        // dragon is unreachable through the loot table in any case.
+        BossSpoils.dropFor(entity);
+
         LegendaryPrefix prefix = LegendaryData.prefixOf(entity);
         if (prefix == null) {
             return;

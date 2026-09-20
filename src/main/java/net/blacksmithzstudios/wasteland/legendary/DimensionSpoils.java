@@ -94,7 +94,7 @@ public final class DimensionSpoils {
     private static List<Item> endCache = List.of();
 
     /** Resolved once per config load, like the other pools. */
-    private static synchronized List<Item> endPool() {
+    static synchronized List<Item> endPool() {
         List<? extends String> configured = WastelandConfig.END_SPOILS_ITEMS.get();
         if (configured != endSource) {
             endCache = LegendaryLoot.resolvePool(configured, Items.ENDER_PEARL);

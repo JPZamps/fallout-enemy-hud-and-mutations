@@ -42,6 +42,7 @@ public class WastelandConfig {
     public static final ForgeConfigSpec.BooleanValue NETHERITE_SCRAP_ENABLED;
     public static final ForgeConfigSpec.DoubleValue NETHERITE_SCRAP_CHANCE;
     public static final ForgeConfigSpec.DoubleValue NETHERITE_SCRAP_BOSS_CHANCE;
+    public static final ForgeConfigSpec.BooleanValue BOSS_SPOILS_ENABLED;
     public static final ForgeConfigSpec.BooleanValue END_SPOILS_ENABLED;
     public static final ForgeConfigSpec.DoubleValue END_SPOILS_CHANCE;
     public static final ForgeConfigSpec.DoubleValue END_SPOILS_BOSS_CHANCE;
@@ -150,6 +151,12 @@ public class WastelandConfig {
         NETHERITE_SCRAP_BOSS_CHANCE = BUILDER
                 .comment("Chance for a boss, which drops one or two scraps.")
                 .defineInRange("netheriteScrapBossChance", 0.5, 0.0, 1.0);
+        BOSS_SPOILS_ENABLED = BUILDER
+                .comment("The Wither and the Ender Dragon drop rewards of their own on death,",
+                         "spawned directly rather than through a loot table. The dragon rolls no",
+                         "loot table at all, so this is the only way to reward killing it.",
+                         "A legendary boss doubles the haul, a mutated one triples it.")
+                .define("bossSpoilsEnabled", true);
         END_SPOILS_ENABLED = BUILDER
                 .comment("The same idea in the End: bosses, legendaries and high elites killed",
                          "there can drop End materials. Covers endermen and shulkers.")
@@ -211,10 +218,7 @@ public class WastelandConfig {
                          "Use * as the mob id to match every legendary.",
                          "Example: minecraft:creeper ; minecraft:nether_star ; 0.05 ; 1-1",
                          "Chance is 0.0 to 1.0, and doubles for a mutated kill.")
-                .defineList("mobLootRules", List.of(
-                        "minecraft:wither ; minecraft:nether_star ; 1.0 ; 3-4",
-                        "minecraft:ender_dragon ; minecraft:end_crystal ; 1.0 ; 2-4"
-                ), entry -> entry instanceof String);
+                .defineList("mobLootRules", List.of(), entry -> entry instanceof String);
         BUILDER.pop();
 
         BUILDER.comment("Legendary weapons and armour carried by legendary mobs,",
