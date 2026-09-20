@@ -21,6 +21,8 @@ public class WastelandConfig {
     public static final ForgeConfigSpec.DoubleValue MUTATION_RANGE;
     public static final ForgeConfigSpec.BooleanValue GLOWING_LEGENDARIES;
     public static final ForgeConfigSpec.BooleanValue PREFIX_SIGNATURES;
+    public static final ForgeConfigSpec.BooleanValue MUTATION_PARTICLES;
+    public static final ForgeConfigSpec.DoubleValue PARTICLE_RANGE;
     public static final ForgeConfigSpec.DoubleValue LEGENDARY_STRENGTH;
     public static final ForgeConfigSpec.DoubleValue EASY_SCALE;
     public static final ForgeConfigSpec.DoubleValue NORMAL_SCALE;
@@ -95,6 +97,14 @@ public class WastelandConfig {
                 .comment("Emit one vanilla particle per legendary prefix, so the rolls",
                          "can be told apart in a fight.")
                 .define("prefixSignatures", true);
+        MUTATION_PARTICLES = BUILDER
+                .comment("The extra burst a mutated mob gives off. Turn this off if you mutate",
+                         "mobs in bulk: hundreds of them at once is a lot of particles.")
+                .define("mutationParticles", true);
+        PARTICLE_RANGE = BUILDER
+                .comment("Only emit signature particles within this many blocks of a player.",
+                         "Nobody sees the rest, and sending them is pure cost.")
+                .defineInRange("particleRange", 32.0, 4.0, 256.0);
         LEGENDARY_STRENGTH = BUILDER
                 .comment("Scales every legendary stat bonus. 1.0 is the base tuning,",
                          "2.0 makes legendaries twice as far above a normal mob, 5.0 is brutal.")
