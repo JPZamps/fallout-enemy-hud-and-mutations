@@ -42,6 +42,10 @@ public class WastelandConfig {
     public static final ForgeConfigSpec.BooleanValue NETHERITE_SCRAP_ENABLED;
     public static final ForgeConfigSpec.DoubleValue NETHERITE_SCRAP_CHANCE;
     public static final ForgeConfigSpec.DoubleValue NETHERITE_SCRAP_BOSS_CHANCE;
+    public static final ForgeConfigSpec.BooleanValue END_SPOILS_ENABLED;
+    public static final ForgeConfigSpec.DoubleValue END_SPOILS_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue END_SPOILS_BOSS_CHANCE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> END_SPOILS_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEAR_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SUPPLY_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_LOOT_RULES;
@@ -146,6 +150,23 @@ public class WastelandConfig {
         NETHERITE_SCRAP_BOSS_CHANCE = BUILDER
                 .comment("Chance for a boss, which drops one or two scraps.")
                 .defineInRange("netheriteScrapBossChance", 0.5, 0.0, 1.0);
+        END_SPOILS_ENABLED = BUILDER
+                .comment("The same idea in the End: bosses, legendaries and high elites killed",
+                         "there can drop End materials. Covers endermen and shulkers.")
+                .define("endSpoilsEnabled", true);
+        END_SPOILS_CHANCE = BUILDER
+                .comment("Chance for a legendary or high elite. Doubles for a mutated kill.")
+                .defineInRange("endSpoilsChance", 0.15, 0.0, 1.0);
+        END_SPOILS_BOSS_CHANCE = BUILDER
+                .comment("Chance for a boss, which rolls the pool two to four times.")
+                .defineInRange("endSpoilsBossChance", 0.6, 0.0, 1.0);
+        END_SPOILS_ITEMS = BUILDER
+                .comment("What the End can pay out.")
+                .defineList("endSpoilsItems", List.of(
+                        "minecraft:shulker_shell", "minecraft:ender_eye",
+                        "minecraft:chorus_fruit", "minecraft:popped_chorus_fruit",
+                        "minecraft:dragon_breath", "minecraft:ender_pearl"
+                ), entry -> entry instanceof String);
         OVERCHARGED_ENCHANTMENTS = BUILDER
                 .comment("Let drops carry enchantments past their vanilla maximum,",
                          "such as Protection VI or Sharpness VII.")
