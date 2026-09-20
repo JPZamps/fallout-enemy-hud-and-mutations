@@ -42,6 +42,14 @@ public class LegendaryLootModifier extends LootModifier {
             return loot;
         }
 
+        // Every loot table runs through here, not just the ones rolled on death. A block
+        // destroyed by the Wither rolls its own table with THIS_ENTITY set to the Wither,
+        // which made a legendary Wither rain legendary loot with every block it broke.
+        // Only a death has a damage source.
+        if (context.getParamOrNull(LootContextParams.DAMAGE_SOURCE) == null) {
+            return loot;
+        }
+
         // Rolled first: a plain boss is neither legendary nor elite, and would never reach
         // the rest of this method.
         loot.addAll(DimensionSpoils.roll(entity, context.getRandom()));
