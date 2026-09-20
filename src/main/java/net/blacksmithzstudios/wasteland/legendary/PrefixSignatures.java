@@ -41,18 +41,25 @@ public final class PrefixSignatures {
             return;
         }
 
+        // Particles are only worth sending to someone who can see them. Without this, a few
+        // hundred mutated mobs across the world each emit on their own schedule forever.
+        double range = WastelandConfig.PARTICLE_RANGE.get();
+        if (level.getNearestPlayer(entity, range) == null) {
+            return;
+        }
+
         LegendaryPrefix prefix = LegendaryData.prefixOf(entity);
         if (prefix == null) {
             return;
         }
 
         // A mutated legendary keeps its roll's particle but burns hotter alongside it.
-        int count = LegendaryData.hasMutated(entity) ? 4 : 2;
+        int count = LegendaryData.hasMutated(entity) && WastelandConfig.MUTATION_PARTICLES.get() ? 4 : 2;
         level.sendParticles(prefix.signature(),
                 entity.getX(), entity.getY() + entity.getBbHeight() * 0.6, entity.getZ(),
                 count, entity.getBbWidth() * 0.4, entity.getBbHeight() * 0.3, entity.getBbWidth() * 0.4, 0.01);
 
-        if (LegendaryData.hasMutated(entity)) {
+        if (LegendaryData.hasMutated(entity) && WastelandConfig.MUTATION_PARTICLES.get()) {
             level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
                     entity.getX(), entity.getY() + entity.getBbHeight() * 0.6, entity.getZ(),
                     1, 0.3, 0.3, 0.3, 0.005);
