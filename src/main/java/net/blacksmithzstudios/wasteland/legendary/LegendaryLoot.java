@@ -152,7 +152,7 @@ public final class LegendaryLoot {
     private static synchronized List<Item> gearPool() {
         List<? extends String> configured = WastelandConfig.GEAR_ITEMS.get();
         if (configured != gearSource) {
-            gearCache = resolve(configured, Items.IRON_SWORD);
+            gearCache = resolvePool(configured, Items.IRON_SWORD);
             gearSource = configured;
         }
         return gearCache;
@@ -161,14 +161,14 @@ public final class LegendaryLoot {
     private static synchronized List<Item> supplyPool() {
         List<? extends String> configured = WastelandConfig.SUPPLY_ITEMS.get();
         if (configured != supplySource) {
-            supplyCache = resolve(configured, Items.BREAD);
+            supplyCache = resolvePool(configured, Items.BREAD);
             supplySource = configured;
         }
         return supplyCache;
     }
 
     /** Turns configured registry ids into items, quietly skipping ones no mod provides. */
-    private static List<Item> resolve(List<? extends String> ids, Item fallback) {
+    static List<Item> resolvePool(List<? extends String> ids, Item fallback) {
         List<Item> items = new ArrayList<>();
         for (String id : ids) {
             ResourceLocation key = ResourceLocation.tryParse(id);
